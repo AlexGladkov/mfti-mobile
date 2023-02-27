@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MFTI_Sample</string>
+    <string name="main_title">Find Your\nFavorite Food</string>
+    <string name="search_hint">What do you want to order?</string>
+    <string name="popular_title">Popular Restaurant</string>
+    <string name="nearest_title">Nearest Restaurant</string>
 </resources>
