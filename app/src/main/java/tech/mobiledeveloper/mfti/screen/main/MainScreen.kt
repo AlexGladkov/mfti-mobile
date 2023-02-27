@@ -1,5 +1,6 @@
-package tech.mobiledeveloper.mfti.screen
+package tech.mobiledeveloper.mfti.screen.main
 
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,23 +11,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -35,8 +30,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import tech.mobiledeveloper.mfti.R
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 
 data class Restaurant(
@@ -47,17 +44,9 @@ data class Restaurant(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
-    var searchValue by remember { mutableStateOf("") }
-    val nearestRestaurant = listOf(
-        Restaurant(name = "KFC", deliveryTime = "12 min", logo = "https://play-lh.googleusercontent.com/s7slUGiae9bq7XuYur0GWd_qDp_UXgo_5BIpzOT_BvKGg17TYG5QDr3ckqPcpq20jVU"),
-        Restaurant(name = "Burger King", deliveryTime = "10 min", logo = "https://img.wongnai.com/p/1920x0/2019/02/26/cebf62f2742e4756a42b6b505070d6fe.jpg")
-    )
-
-    val popularRestaurant = listOf(
-        Restaurant(name = "Stars Coffee", deliveryTime = "25 min", logo = "https://riamo.ru/files/image/23/76/25/-gallery!00r2.jpg"),
-        Restaurant(name = "Black Star Burger", deliveryTime = "5 min", logo = "https://www.rusfranch.ru/u/www/images/catalog/logo_image_nwna9cyklpaicbxlpzm2c7pvqbck0mgfa.png")
-    )
+fun MainScreen(mainViewModel: MainViewModel = viewModel()) {
+    val state by mainViewModel.viewState.observeAsState()
+    val viewState = state ?: return
 
     Column {
         Text(
@@ -75,7 +64,7 @@ fun MainScreen() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 25.dp, end = 25.dp),
-                value = searchValue,
+                value = viewState.searchQuery,
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = Color.Transparent,
                     disabledBorderColor = Color.Transparent,
@@ -93,7 +82,7 @@ fun MainScreen() {
                     )
                 },
                 onValueChange = {
-                    searchValue = it
+                    mainViewModel.searchQuery(it)
                 })
         }
 
@@ -104,13 +93,13 @@ fun MainScreen() {
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             content = {
-                nearestRestaurant.forEach {
+                viewState.nearestRestaurant.forEach {
                     item {
                         RestaurantCell(model = it)
                     }
                 }
 
-                popularRestaurant.forEach {
+                viewState.popularRestaurant.forEach {
                     item {
                         RestaurantCell(model = it)
                     }
@@ -139,7 +128,9 @@ fun RestaurantCell(model: Restaurant) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AsyncImage(
-                modifier = Modifier.fillMaxWidth().height(73.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(73.dp),
                 model = model.logo,
                 contentDescription = "${model.name} logo"
             )
