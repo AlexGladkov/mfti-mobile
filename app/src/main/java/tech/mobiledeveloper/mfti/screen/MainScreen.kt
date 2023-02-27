@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import tech.mobiledeveloper.mfti.R
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.style.TextOverflow
 import coil.compose.AsyncImage
 
 data class Restaurant(
@@ -147,14 +148,17 @@ fun RestaurantCell(model: Restaurant) {
                 modifier = Modifier.padding(top = 16.dp),
                 text = model.name,
                 fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
+                fontSize = 16.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
 
             Text(
                 modifier = Modifier.padding(top = 4.dp),
                 text = model.deliveryTime,
                 fontWeight = FontWeight.Light,
-                fontSize = 13.sp
+                fontSize = 13.sp,
+                maxLines = 1
             )
         }
 
