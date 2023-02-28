@@ -35,12 +35,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import tech.mobiledeveloper.mfti.data.RemoteRestaurant
 
 data class Restaurant(
     val name: String,
     val deliveryTime: String,
     val logo: String
 )
+
+fun RemoteRestaurant.mapToRestaurant(): Restaurant {
+    return Restaurant(name = name, deliveryTime = deliveryTime, logo = image)
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

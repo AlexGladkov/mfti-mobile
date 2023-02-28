@@ -31,25 +31,14 @@ class MainViewModel @Inject constructor(private val restaurantRepository: Restau
 
     private fun fetchRestaurants() {
         viewModelScope.launch {
-            launch {
-                val nearestRestaurant = restaurantRepository.fetchNearest()
+            val response = restaurantRepository.fetchCatalog()
 
-                _viewState.postValue(
-                    _viewState.value?.copy(
-                        nearestRestaurant = nearestRestaurant,
-                    )
+            _viewState.postValue(
+                _viewState.value?.copy(
+                    nearestRestaurant = response.nearest.map { it.mapToRestaurant() },
+                    popularRestaurant = response.popular.map { it.mapToRestaurant() }
                 )
-            }
-
-            launch {
-                val popularRestaurant = restaurantRepository.fetchPopular()
-
-                _viewState.postValue(
-                    _viewState.value?.copy(
-                        popularRestaurant = popularRestaurant,
-                    )
-                )
-            }
+            )
         }
     }
 }
