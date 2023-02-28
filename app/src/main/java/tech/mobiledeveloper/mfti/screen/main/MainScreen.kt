@@ -1,6 +1,5 @@
 package tech.mobiledeveloper.mfti.screen.main
 
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -35,7 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import tech.mobiledeveloper.mfti.data.RemoteRestaurant
+import tech.mobiledeveloper.mfti.data.catalog.RemoteRestaurant
 
 data class Restaurant(
     val name: String,

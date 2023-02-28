@@ -1,4 +1,4 @@
-package tech.mobiledeveloper.mfti.data
+package tech.mobiledeveloper.mfti.data.catalog
 
 import kotlinx.serialization.Serializable
 
@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class CatalogResponse(
     val nearest: List<RemoteRestaurant>,
     val popular: List<RemoteRestaurant>,
-    val commercial: RemoteCommercial
+    val commercial: RemoteCommercial? = null
 )
 
 @Serializable
