@@ -32,11 +32,14 @@ import tech.mobiledeveloper.mfti.R
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.google.android.gms.location.LocationServices
 import tech.mobiledeveloper.mfti.data.catalog.RemoteRestaurant
+import java.lang.Exception
 
 data class Restaurant(
     val name: String,
@@ -53,6 +56,7 @@ fun RemoteRestaurant.mapToRestaurant(): Restaurant {
 fun MainScreen(mainViewModel: MainViewModel, navController: NavController) {
     val state by mainViewModel.viewState.observeAsState()
     val viewState = state ?: return
+    val context = LocalContext.current
 
     Column {
         Text(
@@ -121,6 +125,11 @@ fun MainScreen(mainViewModel: MainViewModel, navController: NavController) {
 
     LaunchedEffect(key1 = Unit, block = {
         mainViewModel.fetchRestaurants()
+
+        val provider = LocationServices.getFusedLocationProviderClient(context)
+        provider.lastLocation.addOnSuccessListener {
+            // Do smth with location
+        }
     })
 }
 
