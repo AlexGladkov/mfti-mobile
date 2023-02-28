@@ -38,7 +38,7 @@ class RestaurantRepository @Inject constructor(
 
                 emit(response)
             } catch (e: Exception) {
-                // Handle error
+                e.printStackTrace()
             }
         }
     }

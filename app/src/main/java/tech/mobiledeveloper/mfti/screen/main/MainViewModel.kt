@@ -1,11 +1,13 @@
 package tech.mobiledeveloper.mfti.screen.main
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
@@ -26,18 +28,15 @@ class MainViewModel @Inject constructor(private val restaurantRepository: Restau
     private val _viewState: MutableLiveData<MainViewState> = MutableLiveData(MainViewState())
     val viewState: LiveData<MainViewState> = _viewState
 
-    init {
-        fetchRestaurants()
-    }
-
     fun searchQuery(query: String) {
         _viewState.postValue(_viewState.value?.copy(searchQuery = query))
     }
 
-    private fun fetchRestaurants() {
+    fun fetchRestaurants() {
         viewModelScope.launch(Dispatchers.IO) {
             restaurantRepository.fetchCatalog()
-                .collectLatest { response ->
+                .collect { response ->
+                    Log.e("TAG", "Response $response")
                     _viewState.postValue(
                         _viewState.value?.copy(
                             nearestRestaurant = response.nearest.map { it.mapToRestaurant() },

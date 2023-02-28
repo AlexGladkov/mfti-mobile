@@ -1,5 +1,6 @@
 package tech.mobiledeveloper.mfti.screen.main
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -33,6 +34,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import tech.mobiledeveloper.mfti.data.catalog.RemoteRestaurant
 
@@ -48,7 +50,7 @@ fun RemoteRestaurant.mapToRestaurant(): Restaurant {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(mainViewModel: MainViewModel = viewModel()) {
+fun MainScreen(mainViewModel: MainViewModel, navController: NavController) {
     val state by mainViewModel.viewState.observeAsState()
     val viewState = state ?: return
 
@@ -99,25 +101,35 @@ fun MainScreen(mainViewModel: MainViewModel = viewModel()) {
             content = {
                 viewState.nearestRestaurant.forEach {
                     item {
-                        RestaurantCell(model = it)
+                        RestaurantCell(model = it) {
+                            navController.navigate("detail/${it.name}")
+                        }
                     }
                 }
 
                 viewState.popularRestaurant.forEach {
                     item {
-                        RestaurantCell(model = it)
+                        RestaurantCell(model = it) {
+                            navController.navigate("detail/${it.name}")
+                        }
                     }
                 }
             },
             contentPadding = PaddingValues(horizontal = 25.dp)
         )
     }
+
+    LaunchedEffect(key1 = Unit, block = {
+        mainViewModel.fetchRestaurants()
+    })
 }
 
 @Composable
-fun RestaurantCell(model: Restaurant) {
+fun RestaurantCell(model: Restaurant, onClick: () -> Unit) {
     Card(
-        modifier = Modifier.size(width = 147.dp, height = 184.dp),
+        modifier = Modifier
+            .clickable { onClick.invoke() }
+            .size(width = 147.dp, height = 184.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         ),
