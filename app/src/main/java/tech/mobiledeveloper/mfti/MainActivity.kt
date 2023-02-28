@@ -17,6 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import tech.mobiledeveloper.mfti.screen.detail.DetailScreen
 import tech.mobiledeveloper.mfti.screen.main.MainScreen
 import tech.mobiledeveloper.mfti.screen.main.MainViewModel
+import tech.mobiledeveloper.mfti.screen.onboarding.OnboardingScreen
 import tech.mobiledeveloper.mfti.ui.theme.MFTI_SampleTheme
 
 @AndroidEntryPoint
@@ -33,7 +34,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    NavHost(navController = navController, startDestination = "main") {
+                    NavHost(navController = navController, startDestination = "onboarding") {
+                        composable("onboarding") {
+                            OnboardingScreen(navController = navController)
+                        }
+
                         composable("main") {
                             val viewModel = hiltViewModel<MainViewModel>()
                             MainScreen(mainViewModel = viewModel, navController = navController)
